@@ -1,10 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 * {
   margin: 0;
   box-sizing: border-box;
   background-color: rgb(223, 223, 223);
 }
 
-main {
-  padding: 1rem;
-  height: 100vh;
+input, textarea {
+  border-radius: 3px;
+  border: 1px solid;
+  background-color: rgb(208, 208, 208);
+  padding-left: .5em;
 }

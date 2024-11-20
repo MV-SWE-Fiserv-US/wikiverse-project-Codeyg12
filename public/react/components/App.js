@@ -26,20 +26,23 @@ export const App = () => {
   }, []);
 
   return (
-    <main>
-      <h1>WikiVerse</h1>
+    <main className="p-10 flex flex-col justify-center h-screen">
+      <h1 className="text-5xl text-center mb-4">WikiVerse</h1>
       {slug ? (
         <SingleArticle slug={slug} setSlug={setSlug} />
       ) : isAddingArticle ? (
         <NewArticle setIsAddingArticle={setIsAddingArticle} />
       ) : (
-        <>
-          <h2>An interesting 📚</h2>
+        <div className="self-center">
+          <h2 className="text-2xl mb-4">An interesting 📚</h2>
           <PagesList pages={pages} setSlug={setSlug} />
-          <button onClick={() => setIsAddingArticle(!isAddingArticle)}>
+          <button
+            onClick={() => setIsAddingArticle(!isAddingArticle)}
+            className="border-2 w-80 border-black rounded mt-4 hover:bg-black hover:text-slate-200"
+          >
             Add an Article
           </button>
-        </>
+        </div>
       )}
     </main>
   );

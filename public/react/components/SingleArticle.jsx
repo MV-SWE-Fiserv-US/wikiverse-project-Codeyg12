@@ -24,6 +24,13 @@ const SingleArticle = ({ slug, setSlug }) => {
     return new Date(date).toLocaleDateString("en-US");
   };
 
+  const deleteArticle = async () => {
+    await fetch(`${apiURL}/wiki/${slug}`, {
+      method: "DELETE",
+    });
+    location.reload();
+  };
+
   return (
     <div>
       <h3>{article.title}</h3>
@@ -38,7 +45,10 @@ const SingleArticle = ({ slug, setSlug }) => {
           ))}
         </ul>
       </div>
-      <button onClick={() => setSlug("")}>Back to Wiki List</button>
+      <div>
+        <button onClick={deleteArticle}>Delete</button>
+        <button onClick={() => setSlug("")}>Back to Wiki List</button>
+      </div>
     </div>
   );
 };

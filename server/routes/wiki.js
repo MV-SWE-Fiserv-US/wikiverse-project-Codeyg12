@@ -62,28 +62,33 @@ router.get("/search", async (req, res, next) => {
 // PUT /wiki/:slug
 router.put("/:slug", async (req, res, next) => {
   try {
-    const [updatedRowCount, updatedPages] = await Page.update(req.body, {
+    const page = await Page.findOne({
       where: {
         slug: req.params.slug,
       },
-      returning: true,
     });
+    await page.update(req.body);
 
-    const tagArray = req.body.tags.split(" ");
+    const tagArray = req.body.tags ? req.body.tags.split(" ") : [];
+
     const tags = await Promise.all(
       tagArray.map(async (tagName) => {
         const [tag, wasCreated] = await Tag.findOrCreate({
-          where: {
-            name: tagName,
-          },
+          where: { name: tagName },
         });
         return tag;
       })
     );
 
-    await updatedPages[0].setTags(tags);
+    await page.setTags([]);
+    await page.setTags(tags);
 
-    res.send(updatedPages[0]);
+    const finalPage = await Page.findOne({
+      where: { slug: req.params.slug },
+      include: Tag,
+    });
+
+    res.send(finalPage);
   } catch (error) {
     next(error);
   }

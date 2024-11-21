@@ -1,14 +1,17 @@
 import { useState } from "react";
 import apiURL from "../api";
 
-const NewArticle = ({ setIsAddingArticle }) => {
-  const [article, setArticle] = useState({});
+const UpdateArticle = ({ articleToBeUpdated, setIsUpdatingArticle }) => {
+  const [article, setArticle] = useState({
+    ...articleToBeUpdated,
+    tags: articleToBeUpdated.tags.map((el) => el.name).join(" "),
+  });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch(`${apiURL}/wiki`, {
-        method: "POST",
+      const res = await fetch(`${apiURL}/wiki/${article.slug}`, {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
@@ -33,33 +36,22 @@ const NewArticle = ({ setIsAddingArticle }) => {
           id="title"
           name="title"
           placeholder="Title"
+          value={article.title}
           onChange={(e) => setArticle({ ...article, title: e.target.value })}
         />
         <textarea
           id="content"
           name="content"
           placeholder="Content"
+          value={article.content}
           onChange={(e) => setArticle({ ...article, content: e.target.value })}
-        />
-        <input
-          type="text"
-          id="name"
-          name="name"
-          placeholder="Name"
-          onChange={(e) => setArticle({ ...article, name: e.target.value })}
-        />
-        <input
-          type="email"
-          id="email"
-          name="email"
-          placeholder="Email"
-          onChange={(e) => setArticle({ ...article, email: e.target.value })}
         />
         <input
           type="text"
           id="tags"
           name="tags"
           placeholder="Tags"
+          value={article.tags}
           onChange={(e) => setArticle({ ...article, tags: e.target.value })}
         />
         <button
@@ -70,7 +62,7 @@ const NewArticle = ({ setIsAddingArticle }) => {
         </button>
       </form>
       <button
-        onClick={() => setIsAddingArticle(false)}
+        onClick={() => setIsUpdatingArticle(false)}
         className="border border-black w-80 self-center mt-4 rounded hover:bg-black hover:text-slate-200 py-2"
       >
         Back to Wiki List
@@ -78,4 +70,4 @@ const NewArticle = ({ setIsAddingArticle }) => {
     </>
   );
 };
-export default NewArticle;
+export default UpdateArticle;

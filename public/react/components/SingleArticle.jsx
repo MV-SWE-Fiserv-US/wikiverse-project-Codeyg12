@@ -1,7 +1,14 @@
 import { useEffect, useState } from "react";
 import apiURL from "../api";
+import DeleteModal from "./DeleteModal";
 
-const SingleArticle = ({ slug, setSlug }) => {
+const SingleArticle = ({
+  slug,
+  setSlug,
+  setArticleToBeUpdated,
+  setIsUpdatingArticle,
+  setSingleUser,
+}) => {
   const [article, setArticle] = useState({
     title: "",
     author: { name: "" },
@@ -9,6 +16,7 @@ const SingleArticle = ({ slug, setSlug }) => {
     content: "",
     tags: [],
   });
+  const [deleteModal, setDeleteModal] = useState(false);
 
   const fetchArticle = async () => {
     const res = await fetch(`${apiURL}/wiki/${slug}`);
@@ -24,32 +32,65 @@ const SingleArticle = ({ slug, setSlug }) => {
     return new Date(date).toLocaleDateString("en-US");
   };
 
-  const deleteArticle = async () => {
-    await fetch(`${apiURL}/wiki/${slug}`, {
-      method: "DELETE",
-    });
-    location.reload();
+  const startUpdate = () => {
+    setIsUpdatingArticle(true);
+    setArticleToBeUpdated(article);
+    setSlug("");
+  };
+
+  const getSingleAuthor = () => {
+    setSingleUser(article.authorId);
+    setSlug("");
   };
 
   return (
-    <div>
-      <h3>{article.title}</h3>
-      <p>Author: {article.author.name}</p>
-      <p>Published: {formatDate(article.createdAt)}</p>
-      <p>{article.content}</p>
-      <div>
-        Tags:{" "}
-        <ul>
-          {article.tags.map((tag) => (
-            <li key={tag.id}>{tag.name}</li>
-          ))}
-        </ul>
+    <>
+      <div className={"self-center " + (deleteModal && "blur-sm")}>
+        <h3 className="font-bold text-2xl">{article.title}</h3>
+        <p className="cursor-pointer hover:font-bold" onClick={getSingleAuthor}>
+          <span className="font-bold mr-2">Author: </span>
+          {article.author.name}
+        </p>
+        <p>
+          <span className="font-bold mr-2">Published: </span>
+          {formatDate(article.createdAt)}
+        </p>
+        <p>{article.content}</p>
+        <div>
+          <span className="font-bold">Tags: </span>
+          <ul>
+            {article.tags.map((tag) => (
+              <li key={tag.id} className="italic">
+                #{tag.name}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="grid grid-cols-2 grid-rows-2 gap-2 my-2">
+          <button
+            className="border border-black px-2 py-1 mt-2 hover:bg-red-500 hover:border-slate-400 hover:text-slate-200"
+            onClick={() => setDeleteModal(true)}
+          >
+            Delete
+          </button>
+          <button
+            className="border border-black px-2 mt-2 hover:bg-blue-400 hover:border-slate-400 hover:text-slate-200"
+            onClick={startUpdate}
+          >
+            Edit
+          </button>
+          <button
+            className="border border-black px-2 hover:bg-black hover:text-slate-200 col-span-full"
+            onClick={() => setSlug("")}
+          >
+            Back to Wiki List
+          </button>
+        </div>
       </div>
-      <div>
-        <button onClick={deleteArticle}>Delete</button>
-        <button onClick={() => setSlug("")}>Back to Wiki List</button>
-      </div>
-    </div>
+      {deleteModal && (
+        <DeleteModal slug={slug} setDeleteModal={setDeleteModal} />
+      )}
+    </>
   );
 };
 

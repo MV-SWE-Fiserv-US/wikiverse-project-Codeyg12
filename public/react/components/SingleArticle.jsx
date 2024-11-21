@@ -2,7 +2,12 @@ import { useEffect, useState } from "react";
 import apiURL from "../api";
 import DeleteModal from "./DeleteModal";
 
-const SingleArticle = ({ slug, setSlug }) => {
+const SingleArticle = ({
+  slug,
+  setSlug,
+  setArticleToBeUpdated,
+  setIsUpdatingArticle,
+}) => {
   const [article, setArticle] = useState({
     title: "",
     author: { name: "" },
@@ -24,6 +29,12 @@ const SingleArticle = ({ slug, setSlug }) => {
 
   const formatDate = (date) => {
     return new Date(date).toLocaleDateString("en-US");
+  };
+
+  const startUpdate = () => {
+    setIsUpdatingArticle(true);
+    setArticleToBeUpdated(article);
+    setSlug("");
   };
 
   return (
@@ -56,7 +67,10 @@ const SingleArticle = ({ slug, setSlug }) => {
           >
             Delete
           </button>
-          <button className="border border-black px-2 mt-2 hover:bg-blue-400 hover:border-slate-400 hover:text-slate-200">
+          <button
+            className="border border-black px-2 mt-2 hover:bg-blue-400 hover:border-slate-400 hover:text-slate-200"
+            onClick={startUpdate}
+          >
             Edit
           </button>
           <button

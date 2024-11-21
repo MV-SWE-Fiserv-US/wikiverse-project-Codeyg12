@@ -7,6 +7,7 @@ const SingleArticle = ({
   setSlug,
   setArticleToBeUpdated,
   setIsUpdatingArticle,
+  setSingleUser,
 }) => {
   const [article, setArticle] = useState({
     title: "",
@@ -37,11 +38,16 @@ const SingleArticle = ({
     setSlug("");
   };
 
+  const getSingleAuthor = () => {
+    setSingleUser(article.authorId);
+    setSlug("");
+  };
+
   return (
     <>
       <div className={"self-center " + (deleteModal && "blur-sm")}>
         <h3 className="font-bold text-2xl">{article.title}</h3>
-        <p>
+        <p className="cursor-pointer hover:font-bold" onClick={getSingleAuthor}>
           <span className="font-bold mr-2">Author: </span>
           {article.author.name}
         </p>

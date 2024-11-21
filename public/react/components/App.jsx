@@ -6,13 +6,15 @@ import NewArticle from "./NewArticle";
 // import and prepend the api url to any fetch calls
 import apiURL from "../api";
 import UpdateArticle from "./UpdateArticle";
+import SingleAuthor from "./SingleAuthor";
 
 export const App = () => {
   const [pages, setPages] = useState([]);
   const [slug, setSlug] = useState("");
+  const [articleToBeUpdated, setArticleToBeUpdated] = useState({});
+  const [singleUser, setSingleUser] = useState(false);
   const [isAddingArticle, setIsAddingArticle] = useState(false);
   const [isUpdatingArticle, setIsUpdatingArticle] = useState(false);
-  const [articleToBeUpdated, setArticleToBeUpdated] = useState({});
 
   async function fetchPages() {
     try {
@@ -37,6 +39,7 @@ export const App = () => {
           setSlug={setSlug}
           setArticleToBeUpdated={setArticleToBeUpdated}
           setIsUpdatingArticle={setIsUpdatingArticle}
+          setSingleUser={setSingleUser}
         />
       ) : isAddingArticle ? (
         <NewArticle setIsAddingArticle={setIsAddingArticle} />
@@ -44,6 +47,12 @@ export const App = () => {
         <UpdateArticle
           articleToBeUpdated={articleToBeUpdated}
           setIsUpdatingArticle={setIsUpdatingArticle}
+        />
+      ) : singleUser ? (
+        <SingleAuthor
+          singleUser={singleUser}
+          setSingleUser={setSingleUser}
+          setSlug={setSlug}
         />
       ) : (
         <div className="self-center">
